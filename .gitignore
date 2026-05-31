@@ -1,0 +1,19 @@
+# Design source files
+Design Package/
+
+# Non-website files
+*.pdf
+*.zip
+*.mov
+serve.py
+server.py
+Case Studies_Moonward/
+
+# Duplicate / unused video
+Hero Video.mp4
+
+# Claude Code internals
+.claude/
+
+# macOS
+.DS_Store

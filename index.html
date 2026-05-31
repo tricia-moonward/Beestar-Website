@@ -1,0 +1,2678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beestar — High-Integrity Bee & Pollination Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="video" href="hero.mp4" type="video/mp4" />
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── Tokens ── */
+    :root {
+      --cream:      #fffef4;
+      --g1000:      #1e2c0f;
+      --g800:       #4b563f;
+      --g600:       #78806f;
+      --g400:       #a5ab9f;
+      --g100:       #e8eae7;
+      --gmid:       #747751;
+      --yellow:     #faffa4;
+      --white:      #ffffff;
+      --font:       'Plus Jakarta Sans', sans-serif;
+      --px:         300px;
+      --py:         100px;
+    }
+
+    /* ── Base ── */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--cream);
+      color: var(--g1000);
+      overflow-x: hidden;
+    }
+
+    /* ── Gradient text helpers ── */
+    .gt-dark {
+      background: linear-gradient(to bottom, var(--g1000), var(--gmid));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gt-light {
+      background: linear-gradient(to bottom, var(--yellow), var(--gmid));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-yellow  { background: var(--yellow); color: var(--g800); border: 1px solid var(--g100); }
+    .btn-ghost   { background: rgba(255,254,244,.12); border: 1px solid rgba(255,254,244,.55); backdrop-filter: blur(12px); color: var(--cream); font-weight: 400; }
+    .btn-white   { background: var(--white); border: 1px solid var(--g100); color: var(--g800); font-weight: 400; }
+    .btn-outline-dark { background: var(--white); border: 1px solid var(--g100); color: var(--g800); font-weight: 400; }
+
+    /* ═══════════════════════════════════════════
+       1. HERO
+    ═══════════════════════════════════════════ */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      background-color: #080a06; /* fallback while video loads */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px;
+      overflow: hidden;
+    }
+    #hero .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    #hero .hero-bg video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: .75;
+    }
+    #hero .hero-bg-overlay {
+      position: absolute;
+      inset: 0;
+      /* top bar keeps nav legible, bottom bar keeps headline legible */
+      background:
+        linear-gradient(to bottom,  rgba(0,0,0,.55) 0%,   rgba(0,0,0,0)   25%),
+        linear-gradient(to top,     rgba(0,0,0,.75) 0%,   rgba(0,0,0,0)   45%);
+      pointer-events: none;
+    }
+
+    /* ── Fixed site nav ── */
+    #site-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      transition: background .35s ease, box-shadow .35s ease;
+    }
+    #site-nav.scrolled {
+      background: #1e2c0f;
+      box-shadow: 0 2px 24px rgba(0,0,0,.3);
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    /* Ensure buttons always visible in both nav states */
+    .nav-actions { display: flex; gap: 8px; opacity: 1; }
+    .nav-actions .btn { opacity: 1; }
+    #site-nav.scrolled .btn-ghost {
+      background: rgba(255,254,244,.15);
+      border-color: rgba(255,254,244,.55);
+    }
+
+    /* Nav */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 24px 40px;
+    }
+    .nav-logo img { height: 32px; width: auto; max-width: none; flex-shrink: 0; display: block; }
+    footer img.footer-logo { height: 32px; width: auto; max-width: none; object-fit: contain; flex-shrink: 0; }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      font-size: 16px;
+      color: rgba(255,254,244,.8);
+      font-weight: 400;
+    }
+    .nav-links a:hover { color: var(--cream); }
+    .nav-actions { display: flex; gap: 8px; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: all .3s;
+    }
+
+    /* Mobile nav drawer */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(170deg, #1a2b0d 0%, #2e3f18 55%, #4a5a28 100%);
+      z-index: 100;
+      flex-direction: column;
+      padding: 0 40px 60px;
+      min-height: 100vh;
+    }
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+    }
+    .mobile-nav-close {
+      color: var(--cream);
+      font-size: 32px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+    }
+    .mobile-nav-links a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--cream);
+      padding: 24px 0;
+      border-top: 1px solid rgba(255,254,244,.18);
+      text-decoration: none;
+    }
+    .mobile-nav-links a:last-child {
+      border-bottom: 1px solid rgba(255,254,244,.18);
+    }
+    .mobile-nav-links a span:last-child {
+      font-size: 28px;
+      opacity: 0.8;
+    }
+    .mobile-nav-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 40px;
+    }
+
+    /* Hero body */
+    .hero-body {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .hero-main {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      max-width: 520px;
+    }
+    .hero-cta { align-self: flex-start; }
+    .hero-heading {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .hero-h1 {
+      font-size: 56px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.56px;
+      color: var(--cream);
+      text-transform: capitalize;
+    }
+    .hero-h1 span { color: var(--yellow); }
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: rgba(255,254,244,.8);
+    }
+    /* Stats */
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: -0.32px;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(255,254,244,.8);
+      letter-spacing: -0.16px;
+      white-space: nowrap;
+    }
+    .stat-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,254,244,.2);
+      flex-shrink: 0;
+    }
+
+    /* Scroll indicator */
+    .hero-footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .scroll-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,254,244,.2);
+      border: 1px solid rgba(255,254,244,.1);
+      backdrop-filter: blur(12px);
+      border-radius: 40px;
+      padding: 8px 16px;
+      color: rgba(255,254,244,.8);
+      font-size: 14px;
+    }
+    .scroll-pill svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ═══════════════════════════════════════════
+       2. PARTNERS MARQUEE
+    ═══════════════════════════════════════════ */
+    #partners {
+      background: var(--cream);
+      padding: var(--py) 0;
+      overflow: hidden;
+    }
+    /* Viewport clips the scrolling track and applies the edge fades */
+    .partners-viewport {
+      width: 100%;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 14%,
+        black 86%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 14%,
+        black 86%,
+        transparent 100%
+      );
+    }
+    .partners-track {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+      width: max-content;
+      will-change: transform;
+    }
+    .partner-logo {
+      width: 112px;
+      height: 112px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: linear-gradient(to bottom, rgba(30,44,15,.1), rgba(116,119,81,.1));
+      padding: 16px;
+      overflow: hidden;
+    }
+    .partner-logo img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      opacity: .8;
+      mix-blend-mode: multiply;
+    }
+
+    /* ═══════════════════════════════════════════
+       3. OUR WHY
+    ═══════════════════════════════════════════ */
+    #our-why {
+      background: var(--cream);
+      padding: var(--py) var(--px);
+      display: flex;
+      gap: 80px;
+      align-items: flex-start;
+    }
+    .our-why-image {
+      flex: 1;
+      min-width: 0;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .our-why-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .our-why-text {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-self: stretch;
+    }
+    .our-why-header {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .our-why-h2 {
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.48px;
+      line-height: 1;
+      text-transform: capitalize;
+    }
+    .our-why-body {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--g800);
+    }
+    .our-why-body + .our-why-body {
+      margin-top: 24px;
+    }
+
+    /* ═══════════════════════════════════════════
+       4. SOLUTIONS SECTION
+    ═══════════════════════════════════════════ */
+    #solutions {
+      background-color: var(--cream);
+      padding: var(--py) var(--px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 80px;
+    }
+    .solutions-label {
+      display: inline-block;
+      background: var(--white);
+      border: 1px solid #E8EAE7;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--g800);
+      align-self: flex-start;
+    }
+    .tab-switcher {
+      display: inline-flex;
+      background: rgba(232, 234, 231, 0.6);
+      border-radius: 50px;
+      padding: 8px;
+      gap: 4px;
+    }
+    .tab-btn {
+      border: none;
+      background: none;
+      border-radius: 38px;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--g400);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--white);
+      color: var(--g1000);
+    }
+    .tab-panel {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      width: 100%;
+    }
+    .tab-panel.active {
+      display: flex;
+    }
+    .solutions-h2 {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.48px;
+      text-align: center;
+      max-width: 960px;
+    }
+    .solutions-body {
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--g800);
+      text-align: center;
+      max-width: 768px;
+    }
+    .solutions-body + .solutions-body {
+      margin-top: 16px;
+    }
+    .solutions-image {
+      width: 100%;
+      height: 765px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .solutions-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ═══════════════════════════════════════════
+       4. VIDEO CTA
+    ═══════════════════════════════════════════ */
+    #video-cta {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #080a06;
+    }
+    .vcta-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .vcta-bg video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+    }
+    .vcta-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,.25) 0%,
+        rgba(0,0,0,.05) 40%,
+        rgba(0,0,0,.35) 100%
+      );
+      pointer-events: none;
+    }
+    .vcta-body {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    /* ═══════════════════════════════════════════
+       5. FEATURES
+    ═══════════════════════════════════════════ */
+    #features {
+      background: var(--cream);
+      padding: var(--py) var(--px);
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+      align-items: center;
+    }
+    .features-header {
+      display: flex;
+      gap: 60px;
+      align-items: center;
+      width: 100%;
+    }
+    .features-h2 {
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.48px;
+      line-height: 1;
+      text-transform: capitalize;
+      flex: 1;
+    }
+    .features-sub {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--g600);
+      flex: 1;
+    }
+    .features-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      width: 100%;
+    }
+    .features-row {
+      display: flex;
+      gap: 24px;
+    }
+    .feature-card {
+      flex: 1;
+      min-width: 0;
+      aspect-ratio: 1/1;
+      border-radius: 8px;
+      border: 1px solid var(--g100);
+      background: linear-gradient(to bottom, rgba(30,44,15,.1), rgba(116,119,81,.1));
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .feature-card-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+      align-items: center;
+    }
+    .feature-num {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.16px;
+    }
+    .feature-title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.24px;
+      text-transform: capitalize;
+    }
+    .feature-desc {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--g600);
+    }
+    .feature-image {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      object-fit: contain;
+      border-radius: 8px 8px 0 0;
+    }
+    .feature-image-full {
+      display: block;
+      width: 320px;
+      max-width: 100%;
+      height: auto;
+      margin-top: auto;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0;
+    }
+    .feature-image-full.center {
+      margin-bottom: auto;
+    }
+    .features-cta {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ═══════════════════════════════════════════
+       5. OUR TEAM
+    ═══════════════════════════════════════════ */
+    #our-team {
+      background: url('bgEffect.png') center center / cover no-repeat, linear-gradient(to bottom, var(--g1000), var(--gmid));
+      padding: var(--py) var(--px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 100px;
+    }
+    .our-team-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      width: 100%;
+    }
+    .our-team-top .solutions-label {
+      align-self: center;
+    }
+    .our-team-h2 {
+      font-size: 48px;
+      font-weight: 500;
+      letter-spacing: -0.48px;
+      line-height: 1.1;
+      text-align: center;
+    }
+    .our-team-bento {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      align-items: stretch;
+    }
+    .our-team-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+    .our-team-col.stretch {
+      align-self: stretch;
+    }
+    .our-team-story-card {
+      backdrop-filter: blur(17px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 24px;
+      min-height: 200px;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    .our-team-story-title {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.24px;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+    .our-team-story-body {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 254, 244, 0.8);
+    }
+    .our-team-img-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .our-team-img-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .our-team-img-card.tall {
+      height: 500px;
+      flex-shrink: 0;
+    }
+    .our-team-img-card.flex {
+      height: 300px;
+      flex-shrink: 0;
+    }
+    .btn-dark {
+      background: var(--g1000);
+      color: var(--cream);
+      align-self: flex-start;
+    }
+
+
+    /* ═══════════════════════════════════════════
+       6. OUR PARTNERS
+    ═══════════════════════════════════════════ */
+    #our-partners {
+      background: var(--cream);
+      padding: var(--py) var(--px);
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+    }
+    .partners-header {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .partners-h2 {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.48px;
+    }
+    .partners-body {
+      font-size: 20px;
+      line-height: 1.55;
+      color: var(--g800);
+      max-width: 800px;
+    }
+    .logo-card {
+      width: 112px;
+      height: 112px;
+      background: linear-gradient(to bottom, rgba(30,44,15,0.1), rgba(116,119,81,0.1));
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .logo-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+    .logo-card img.darken {
+      mix-blend-mode: darken;
+    }
+    .logo-card-label {
+      position: absolute;
+      bottom: 6px;
+      font-size: 8px;
+      color: var(--g400);
+      text-transform: capitalize;
+      letter-spacing: -0.08px;
+    }
+    .partners-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .partners-photos {
+      display: flex;
+      gap: 16px;
+    }
+    .partners-photo {
+      flex: 1;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+    }
+    .partners-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .recognition-card {
+      background: var(--yellow);
+      border: 1px solid var(--g100);
+      border-radius: 16px;
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .recognition-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .recognition-h2 {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.24px;
+      line-height: 24px;
+    }
+    .recognition-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .recognition-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .recognition-check {
+      width: 32px;
+      height: 32px;
+      background: var(--white);
+      border: 1px solid var(--g100);
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .recognition-check svg {
+      width: 16px;
+      height: 16px;
+    }
+    .recognition-text {
+      font-size: 16px;
+      color: var(--g800);
+      line-height: 1.4;
+    }
+
+    /* ═══════════════════════════════════════════
+       7. HOW IT WORKS
+    ═══════════════════════════════════════════ */
+    #how-it-works {
+      background: var(--cream);
+      padding: 48px var(--px);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      align-items: center;
+      overflow: visible;
+    }
+    .how-h2 {
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.48px;
+      line-height: 1;
+      text-transform: capitalize;
+      text-align: center;
+    }
+    /* ── How It Works: single pinned card ── */
+    .steps-card {
+      width: 100%;
+      max-width: 1328px;
+      background: var(--white);
+      border: 1px solid var(--g100);
+      border-radius: 16px;
+      overflow: clip;
+      display: flex;
+      flex-direction: row;
+      flex: none;
+      height: 800px;
+      margin-bottom: 40px;
+    }
+
+    /* Left column */
+    .step-left {
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid var(--g100);
+      flex: 0 0 42%;
+    }
+    .step-infos-wrapper {
+      display: grid;
+    }
+    .step-info {
+      grid-area: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .step-info.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .step-content {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .step-title {
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      line-height: 1.1;
+      color: var(--g1000);
+    }
+    .step-subtitle {
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--g600);
+      margin-top: 8px;
+    }
+    .step-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .step-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border: 1px solid var(--g100);
+      border-radius: 100px;
+      font-size: 15px;
+      line-height: 1.4;
+      color: var(--g800);
+      background: transparent;
+      align-self: flex-start;
+    }
+    .step-dots {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .step-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--g100);
+      transition: width .3s, border-radius .3s;
+    }
+    .step-dot.active {
+      width: 86px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--g1000);
+    }
+
+    /* Right column */
+    .step-right {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: var(--white);
+    }
+    .step-media-panel {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .step-media-panel.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .step-media-panel img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      object-fit: cover;
+      object-position: center;
+    }
+    .app-bg {
+      filter: blur(4px);
+      transform: scale(1.05);
+    }
+    .app-phone {
+      object-fit: contain !important;
+      object-position: center center !important;
+      z-index: 1;
+    }
+    .step-media-panel .sensor-overlay {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(30,44,15,.1);
+      min-width: 200px;
+    }
+    .sensor-header {
+      background: rgba(232,234,231,.5);
+      border-bottom: 1px solid var(--g100);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--g1000);
+      letter-spacing: -0.14px;
+    }
+    .sensor-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(30,44,15,.1);
+      font-size: 12px;
+    }
+    .sensor-row:last-child { border-bottom: none; }
+    .sensor-label { color: var(--g800); text-transform: uppercase; letter-spacing: -0.12px; }
+    .sensor-value { color: var(--g1000); font-weight: 600; letter-spacing: -0.14px; font-size: 14px; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #20c68e;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 2px;
+    }
+    .step-media-panel .temp-bar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: white;
+      border: 1px solid rgba(30,44,15,.1);
+      border-radius: 2px;
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(30,44,15,.8);
+    }
+
+    /* ── Step 01: two-column UI card layout ── */
+    .setup-columns {
+      position: absolute;
+      inset: 24px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 20px;
+      padding: 24px;
+      overflow: clip;
+    }
+    .setup-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    .setup-col--right {
+      transform: translateY(-160px);
+    }
+    .setup-ui-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid rgba(232,234,231,.9);
+      padding: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.12);
+      flex-shrink: 0;
+    }
+    .setup-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e2c0f;
+      letter-spacing: -0.14px;
+      margin-bottom: 4px;
+    }
+    .setup-card-q {
+      font-size: 12px;
+      color: #78806f;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .setup-input {
+      width: 100%;
+      border: 1px solid #e8eae7;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: var(--font);
+      color: #a5ab9f;
+      outline: none;
+      background: #fff;
+    }
+    .setup-or-row {
+      text-align: center;
+      font-size: 11px;
+      color: #a5ab9f;
+      letter-spacing: 0.5px;
+      margin: 8px 0;
+    }
+    .setup-checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #4b563f;
+    }
+    .setup-checkbox {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #e8eae7;
+      border-radius: 3px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+    }
+    .setup-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .setup-pill {
+      border: 1px solid #e8eae7;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: #4b563f;
+      font-family: var(--font);
+      background: #fff;
+    }
+    .setup-pill--active {
+      background: #1e2c0f;
+      color: #fff;
+      border-color: #1e2c0f;
+    }
+    .setup-preview {
+      background: #f5f5f3;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .setup-preview-label {
+      font-size: 11px;
+      color: #a5ab9f;
+      margin-bottom: 8px;
+    }
+    .setup-preview-boxes {
+      display: flex;
+      gap: 4px;
+    }
+    .setup-preview-box {
+      border: 1px solid #e8eae7;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #78806f;
+      background: #fff;
+    }
+    .setup-yn-row {
+      display: flex;
+      gap: 8px;
+    }
+    .setup-yn-btn {
+      border: 1px solid #e8eae7;
+      border-radius: 8px;
+      padding: 6px 20px;
+      font-size: 13px;
+      color: #4b563f;
+      font-family: var(--font);
+      background: #fff;
+    }
+
+    /* ═══════════════════════════════════════════
+       7. FAQ
+    ═══════════════════════════════════════════ */
+    #faq {
+      background: var(--cream);
+      padding: var(--py) var(--px);
+      display: flex;
+      gap: 80px;
+      align-items: flex-start;
+    }
+    .faq-title {
+      flex: 1;
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.48px;
+      line-height: 1;
+      text-transform: capitalize;
+    }
+    .faq-groups {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-group {
+      background: var(--white);
+      border: 1px solid var(--g100);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .faq-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--g600);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--g100);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+    .faq-item:last-child { border-bottom: none; margin-bottom: 0; }
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      gap: 24px;
+      width: 100%;
+      padding: 0;
+      background: none;
+      border: none;
+      text-align: left;
+    }
+    .faq-q-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--g1000);
+      flex: 1;
+    }
+    .faq-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--g100);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform .3s;
+    }
+    .faq-icon svg { width: 20px; height: 20px; }
+    .faq-answer {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--g600);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease, margin-top .3s;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px;
+      margin-top: 16px;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+    /* ═══════════════════════════════════════════
+       8. CTA
+    ═══════════════════════════════════════════ */
+    #cta {
+      background: var(--cream);
+      padding: var(--py) var(--px);
+      display: flex;
+      flex-direction: column;
+      gap: 80px;
+    }
+    .cta-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: stretch;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      opacity: .4;
+    }
+    .cta-deco {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 55%;
+      pointer-events: none;
+    }
+    .cta-content {
+      position: relative;
+      z-index: 1;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 24px;
+      width: 70%;
+      flex-shrink: 0;
+      max-width: 70%;
+    }
+    .cta-text {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .cta-h2 {
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.48px;
+      line-height: 1;
+      text-transform: capitalize;
+    }
+    .cta-sub {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--g600);
+    }
+    .cta-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+    .cta-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .cta-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .cta-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--g800);
+    }
+    .cta-req { color: var(--g600); }
+    .cta-form input[type="text"],
+    .cta-form input[type="email"],
+    .cta-form select,
+    .cta-form textarea {
+      background: rgba(30,44,15,.07);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: var(--font);
+      font-size: 16px;
+      color: var(--g1000);
+      width: 100%;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .cta-form input[type="text"]::placeholder,
+    .cta-form input[type="email"]::placeholder,
+    .cta-form textarea::placeholder { color: var(--g400); }
+    .cta-form input:focus,
+    .cta-form select:focus,
+    .cta-form textarea:focus { border-color: rgba(30,44,15,.3); }
+    .cta-form textarea { resize: vertical; min-height: 260px; }
+    .cta-select-wrap { position: relative; }
+    .cta-select-wrap select {
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      padding-right: 40px;
+    }
+    .cta-select-wrap select:required:invalid { color: var(--g400); }
+    .cta-select-wrap select option { color: var(--g1000); }
+    .cta-chevron {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: var(--g600);
+      pointer-events: none;
+    }
+    .cta-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cta-check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      accent-color: var(--g800);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .cta-check label {
+      font-size: 14px;
+      color: var(--g800);
+      cursor: pointer;
+    }
+    .cta-bee {
+      position: absolute;
+      right: -20px;
+      top: 290px;
+      transform: none;
+      width: 560px;
+      max-width: 55%;
+      height: auto;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    /* ═══════════════════════════════════════════
+       9. FOOTER
+    ═══════════════════════════════════════════ */
+    footer {
+      background: var(--cream);
+      padding: 40px var(--px) 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      border-top: 1px solid var(--g100);
+    }
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-cols {
+      display: flex;
+      gap: 60px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .footer-col-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--g400);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .footer-col a {
+      font-size: 14px;
+      color: var(--g800);
+      line-height: 1;
+    }
+    .footer-col a:hover { color: var(--g1000); }
+    .footer-col address {
+      font-size: 14px;
+      font-style: normal;
+      color: var(--g800);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (min-width: 2101px) {
+      :root { --px: calc((100vw - 1500px) / 2); }
+    }
+
+    @media (max-width: 1200px) {
+      :root { --px: 120px; }
+      .hero-stats { flex-wrap: wrap; gap: 16px; }
+      .step-text { flex: 0 0 280px; max-width: 280px; }
+      .features-header { flex-direction: column; gap: 24px; }
+    }
+
+    @media (max-width: 900px) {
+      :root { --px: 40px; --py: 80px; }
+
+      /* Nav */
+      .nav { padding: 24px; }
+      .nav-links { display: none; }
+      .nav-actions { display: none; }
+      .nav-hamburger { display: flex; }
+      #site-nav.scrolled { box-shadow: none; }
+
+      /* ── Typography ── */
+      /* H1 = 48px */
+      .hero-h1 { font-size: 48px; }
+
+      /* H2 = 40px */
+      .solutions-h2,
+      .features-h2,
+      .how-h2,
+      .our-team-h2,
+      .faq-title,
+      .cta-h2 { font-size: 40px; }
+
+      /* Body = 14px */
+      .solutions-body, .features-sub,
+      .step-desc, .step-subtitle, .cta-sub, .our-team-story-body,
+      .faq-answer p, .faq-q-text { font-size: 14px; }
+
+      /* ── Hero (excluded from section height rules) ── */
+      #hero { padding: 24px; }
+      .hero-main { flex-direction: column; gap: 32px; align-items: flex-start; }
+      .hero-text { max-width: 100%; }
+      .hero-stats { flex-wrap: wrap; }
+      .stat-value { font-size: 24px; }
+      .stat-label { font-size: 14px; }
+
+      /* ── Partners ── */
+      /* ── Solutions ── */
+      #solutions { gap: 48px; }
+      .solutions-h2 { font-size: 36px; }
+
+      /* ── Features — min 50vh, horizontal carousel ── */
+      #features { min-height: 50vh; }
+      .features-grid {
+        flex-direction: row;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        gap: 16px;
+        cursor: grab;
+        padding-right: var(--px);
+      }
+      .features-grid::-webkit-scrollbar { display: none; }
+      .features-grid.is-dragging { cursor: grabbing; user-select: none; scroll-behavior: auto; }
+      .features-row { display: contents; }
+      .feature-card {
+        flex: 0 0 420px !important;
+        aspect-ratio: auto;
+        min-height: 320px;
+      }
+
+      /* ── Our Why ── */
+      #our-why { flex-direction: column-reverse; gap: 40px; }
+      .our-why-image { aspect-ratio: 4 / 3; width: 100%; }
+      .our-why-text { align-self: auto; }
+      .our-why-header { gap: 24px; }
+
+      /* ── How it works — vertical column on tablet ── */
+      #how-it-works { min-height: 50vh; }
+      .steps-card { flex-direction: column; height: auto; flex: 1; min-height: 0; }
+      .step-left { padding: 32px; flex: none; border-right: none; border-bottom: 1px solid var(--g100); }
+      .step-infos-wrapper { display: grid; }
+      .step-info.active { opacity: 1; pointer-events: auto; }
+      .step-dots { margin-top: 24px; }
+      .step-right { flex: none; height: 700px; }
+      .step-num { font-size: 24px; }
+      .step-title { font-size: 22px; }
+
+      /* ── Our Team — min 50vh ── */
+      #our-team { min-height: 50vh; }
+
+      /* ── FAQ — min 50vh ── */
+      #faq { min-height: 50vh; flex-direction: column; gap: 40px; }
+
+      /* ── CTA — min 50vh ── */
+      #cta { min-height: 50vh; }
+      .cta-content { max-width: 90%; }
+      .cta-bee { top: 180px; bottom: auto; transform: none; }
+
+      /* ── Footer ── */
+      footer { flex-direction: column; gap: 32px; }
+      .footer-cols { gap: 32px; }
+    }
+
+    @media (max-width: 600px) {
+      :root { --px: 16px; --py: 40px; }
+
+      /* ── Nav ── */
+      .nav { padding: 24px var(--px); }
+
+      /* ── Solutions ── */
+      #solutions { gap: 32px; padding: var(--py) var(--px); }
+      .solutions-h2 { font-size: 28px; }
+      .solutions-image { height: 280px; }
+
+      /* ── Typography: H1 40px, H2 32px, H3 24px, body 14px ── */
+      .hero-h1 { font-size: 40px; }
+      .solutions-h2, .features-h2, .how-h2, .faq-title, .cta-h2, .our-team-h2, .our-why-h2 { font-size: 32px; }
+      .step-title, .feature-title { font-size: 24px; }
+      .solutions-body, .features-sub, .step-desc, .step-subtitle, .cta-sub, .our-team-story-body, .our-why-body { font-size: 14px; }
+      .hero-stats { gap: 12px; }
+      .stat-divider { height: 28px; }
+      .stat-value { font-size: 20px; }
+      .nav-logo img { height: 24px; }
+      footer img.footer-logo { height: 24px; }
+
+      /* ── Features — 100vh, stacked ── */
+      #features { min-height: 100vh; }
+      .features-header { gap: 16px; }
+      .features-row { flex-direction: column; }
+      .feature-card { aspect-ratio: auto; min-height: 300px; }
+      .feature-card-body { padding: 12px; }
+
+      /* ── Our Team ── */
+      #our-team { gap: 48px; }
+      .our-team-bento { flex-direction: column; }
+      .our-team-img-card.tall { height: 280px; }
+      .our-team-story-card { height: auto; padding: 16px; }
+      .our-team-story-title { font-size: 18px; letter-spacing: -0.18px; line-height: 1.2; }
+      .our-team-story-body { font-size: 13px; line-height: 1.5; }
+
+      /* ── How it works — 100vh stacked card ── */
+      #how-it-works { height: calc(100vh - 100px); padding: 40px var(--px); }
+      .steps-card { flex-direction: column; flex: 1; min-height: 0; }
+      .step-left { flex: none; border-right: none; border-bottom: 1px solid var(--g100); padding: 16px; }
+      .step-right { flex: 1; height: auto; min-height: 0; }
+      .setup-col--right { transform: translateY(-80px); }
+
+      /* ── FAQ — 100vh, stacked ── */
+      #faq { min-height: 100vh; flex-direction: column; gap: 32px; }
+      .faq-group { padding: 12px; }
+
+      /* ── CTA — 100vh ── */
+      #cta { min-height: 100vh; }
+      .cta-card { flex-direction: column; }
+      .cta-content { width: 100%; max-width: 100%; padding: 16px; gap: 20px; }
+      .cta-row { grid-template-columns: 1fr; }
+      .cta-bee { display: block !important; position: relative; z-index: 1; width: 260px; max-width: 70%; height: auto; margin: 0 auto; transform: none; top: auto; bottom: auto; right: auto; padding-bottom: 24px; flex-shrink: 0; }
+
+      .partners-track { gap: 6px; }
+      .logo-card { width: 80px; height: 80px; padding: 10px; }
+      .logo-card img { width: 50px; height: 50px; }
+
+      footer { padding-bottom: 40px; }
+      .footer-cols { flex-direction: column; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ──────────────────────────────────────────
+     Fixed site nav
+────────────────────────────────────────── -->
+<header id="site-nav">
+  <nav class="nav" aria-label="Main navigation">
+    <a href="#" class="nav-logo" aria-label="Beestar home">
+      <img src="logo.svg" alt="Beestar" width="209" height="32" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#solutions">Our Why</a></li>
+      <li><a href="#how-it-works">How We Do It</a></li>
+      <li><a href="#how-it-works">Our Tech</a></li>
+      <li><a href="#our-team">Our Team</a></li>
+      <li><a href="#faq">FAQs</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="#how-it-works" class="btn btn-yellow" style="opacity: 1;">See The Technology</a>
+      <a href="#cta" class="btn btn-ghost" style="opacity: 0.4;">Talk To Us</a>
+    </div>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- ──────────────────────────────────────────
+     Mobile nav drawer
+────────────────────────────────────────── -->
+<div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation">
+  <div class="mobile-nav-header">
+    <a href="#" class="nav-logo" aria-label="Beestar home">
+      <img src="logo.svg" alt="Beestar" width="209" height="32" />
+    </a>
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">&times;</button>
+  </div>
+  <nav class="mobile-nav-links">
+    <a href="#solutions"><span>Our Why</span><span aria-hidden="true">→</span></a>
+    <a href="#how-it-works"><span>How We Do It</span><span aria-hidden="true">→</span></a>
+    <a href="#how-it-works"><span>Our Tech</span><span aria-hidden="true">→</span></a>
+    <a href="#our-team"><span>Our Team</span><span aria-hidden="true">→</span></a>
+    <a href="#faq"><span>FAQs</span><span aria-hidden="true">→</span></a>
+  </nav>
+  <div class="mobile-nav-actions">
+    <a href="#how-it-works" class="btn btn-yellow">See The Technology</a>
+    <a href="#cta" class="btn btn-ghost">Talk To Us</a>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────
+     1. HERO
+────────────────────────────────────────── -->
+<section id="hero" aria-label="Hero">
+  <div class="hero-bg" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="auto">
+      <source src="hero.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="hero-bg-overlay" aria-hidden="true"></div>
+
+  <div class="hero-body">
+    <div class="hero-main">
+      <div class="hero-text">
+        <div class="hero-heading">
+          <h1 class="hero-h1">
+            <span>Digital infrastructure </span>for bee dependent economies.
+          </h1>
+          <p class="hero-sub">
+            Live, trusted data from every hive. The foundation the bee dependent economy has been missing.
+          </p>
+        </div>
+        <a href="#cta" class="btn btn-white hero-cta">Talk To Us</a>
+      </div>
+
+      <div class="hero-stats" aria-label="Key statistics">
+        <div class="stat-item">
+          <span class="stat-value">1,847</span>
+          <span class="stat-label">Active Hives</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-value">99%</span>
+          <span class="stat-label">Detection Accuracy</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-value">7</span>
+          <span class="stat-label">Regions Deployed</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-value">24/7</span>
+          <span class="stat-label">In-Hive Sensor Coverage</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-footer">
+      <div class="scroll-pill" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 3v10M3.5 8.5l4.5 4.5 4.5-4.5" stroke="rgba(255,254,244,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Scroll
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     2. PARTNERS
+────────────────────────────────────────── -->
+<section id="partners" aria-label="Trusted partners">
+  <div class="partners-viewport">
+    <div class="partners-track" id="topPartnersTrack">
+      <div class="logo-card"><img src="partner-sa-gov.png" alt="Government partner" /><span class="logo-card-label">Government</span></div>
+      <div class="logo-card"><img class="darken" src="partner-arc.png" alt="Australian Research Council" /><span class="logo-card-label">Research</span></div>
+      <div class="logo-card"><img src="partner-mobius.png" alt="Mobius" /><span class="logo-card-label">Industry</span></div>
+      <div class="logo-card"><img src="partner-uts.png" alt="UTS" /><span class="logo-card-label">Research</span></div>
+      <div class="logo-card"><img src="partner-macquarie.png" alt="Macquarie University" /><span class="logo-card-label">Research</span></div>
+      <div class="logo-card"><img src="partner-nssn.png" alt="NSSN" /><span class="logo-card-label">Research</span></div>
+      <div class="logo-card"><img src="partner-nff.png" alt="Certification partner" /><span class="logo-card-label">Certification</span></div>
+      <div class="logo-card"><img src="partner-evoke.png" alt="Evoke" /><span class="logo-card-label">Certification</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     3. OUR WHY
+────────────────────────────────────────── -->
+<section id="our-why" aria-labelledby="our-why-heading">
+  <div class="our-why-image">
+    <img src="ourWhyImage.png" alt="Beekeeper inspecting hive with bees flying" loading="lazy" />
+  </div>
+  <div class="our-why-text">
+    <div class="our-why-header">
+      <span class="solutions-label">Our Why</span>
+      <h2 class="our-why-h2 gt-dark" id="our-why-heading">Beestar Tries To Understand And Identify The Ecosystem Of Bees</h2>
+    </div>
+    <div>
+      <p class="our-why-body">A bee is never just a bee. Behind every hive sits an entire system. Biology, livelihoods, supply chains, markets, and the people who depend on all of it.</p>
+      <p class="our-why-body">We believe no one has ever seen that whole picture at once. So that is exactly where we begin.</p>
+    </div>
+  </div>
+</section>
+
+<section id="solutions" aria-label="Solutions">
+  <div class="tab-switcher" role="tablist">
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-problem" id="btn-problem">The Problem</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-solution" id="btn-solution">The Solution</button>
+  </div>
+
+  <!-- Panel: The Problem -->
+  <div class="tab-panel active" id="tab-problem" role="tabpanel" aria-labelledby="btn-problem">
+    <h2 class="solutions-h2 gt-dark">Everything Depends On Bees. Almost Nothing About Them Is Measured.</h2>
+    <div>
+      <p class="solutions-body">One in three bites of food on your plate depends on pollination. Yet the hives behind it are still run by hand, by memory, and by guess.</p>
+      <p class="solutions-body">When a colony starts to fail, no one knows until the loss is already done. The losses keep climbing, and the demand for pollination climbs faster.</p>
+      <p class="solutions-body">The system the world quietly leans on has been flying blind.</p>
+    </div>
+    <div class="solutions-image">
+      <img src="theProblem.png" alt="Beekeeper working with hives" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- Panel: The Solution -->
+  <div class="tab-panel" id="tab-solution" role="tabpanel" aria-labelledby="btn-solution">
+    <h2 class="solutions-h2 gt-dark">We Turn Every Hive Into Data You Can Trust</h2>
+    <div>
+      <p class="solutions-body">We build our own global sensing technology and biosensors, and place them where it matters, inside the colony.</p>
+      <p class="solutions-body">That gives us reliable data from every individual hive, not averages and not estimates.</p>
+      <p class="solutions-body">Then we apply domain specific AX, intelligence built only for bees, to turn that data into value across the whole ecosystem.</p>
+    </div>
+    <div class="solutions-image">
+      <img src="theSolution.png" alt="BeeSTAR sensor on honeycomb with bees" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     4. VIDEO CTA
+────────────────────────────────────────── -->
+<section id="video-cta" aria-label="See the technology">
+  <div class="vcta-bg" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="auto">
+      <source src="Website video.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="vcta-overlay" aria-hidden="true"></div>
+  <div class="vcta-body">
+    <a href="#features" class="btn btn-yellow">See The Technology</a>
+    <a href="#contact" class="btn btn-ghost">Talk To Us</a>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     5. HOW IT WORKS
+────────────────────────────────────────── -->
+<section id="how-it-works" aria-labelledby="how-heading">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:24px;width:100%;">
+    <span class="solutions-label" style="align-self:center;">Our Tech</span>
+    <h2 class="how-h2 gt-dark" id="how-heading">The Engine Behind The Bee Dependent Economy</h2>
+    <p class="features-sub" style="max-width:720px;text-align:center;">It starts with automated data collection.<br><br>Our IoT sensors read what is happening inside the hive around the clock, with no extra work for the beekeeper.<br><br>On top of that data we run AI and blockchain to produce more than 32 core apicultural insights, from colony health to traceability you can trust.<br><br>Together they form the engine that powers the bee dependent economy.</p>
+  </div>
+
+  <div class="steps-card">
+    <!-- Left: step info (only one visible at a time) -->
+    <div class="step-left">
+      <div class="step-infos-wrapper">
+        <div class="step-info active" data-step="0">
+          <div class="step-content">
+            <div>
+              <p class="step-title gt-dark">Beestar Sensor</p>
+              <p class="step-subtitle">The hardware that lives inside the hives.</p>
+            </div>
+            <div class="step-pills">
+              <span class="step-pill">Reads the vital signs of a colony around the clock</span>
+              <span class="step-pill">Built to survive real field conditions</span>
+              <span class="step-pill">Catches trouble early, before it becomes a loss</span>
+              <span class="step-pill">Disappears into the operation, no extra work</span>
+            </div>
+          </div>
+        </div>
+        <div class="step-info" data-step="1">
+          <div class="step-content">
+            <div>
+              <p class="step-title gt-dark">Beestar App</p>
+              <p class="step-subtitle">The data, where you need it.</p>
+            </div>
+            <div class="step-pills">
+              <span class="step-pill">Live status for every hive</span>
+              <span class="step-pill">A simple traffic light system for your colony health</span>
+              <span class="step-pill">Plain language, no jargon</span>
+              <span class="step-pill">Built for beekeepers and the people they work with</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step-dots" aria-label="Step indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+    </div>
+
+    <!-- Right: media panels (crossfade between steps) -->
+    <div class="step-right">
+      <div class="step-media-panel active" data-step="0">
+        <img src="beestarSensor.png" alt="Beekeeper holding a hive frame with Beestar sensor" loading="lazy" />
+      </div>
+      <div class="step-media-panel" data-step="1">
+        <img src="beestarApp.png" alt="Beestar App on iPhone showing hive status dashboard" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ──────────────────────────────────────────
+     7. OUR TEAM
+────────────────────────────────────────── -->
+<section id="our-team" aria-labelledby="our-team-heading">
+  <div class="our-team-top">
+    <span class="solutions-label">Our Team</span>
+    <h2 class="our-team-h2 gt-light" id="our-team-heading">It Started With A Phone Call</h2>
+  </div>
+
+  <div class="our-team-bento">
+    <!-- Left column -->
+    <div class="our-team-col">
+      <div class="our-team-story-card">
+        <p class="our-team-story-title">Finding The Problem Of Fake Honey</p>
+        <p class="our-team-story-body">In 2022, one person called us looking for real honey. That call led us to the problem of fake honey, and the problem of fake honey led us to a beekeeper. Through him we saw the reality of beekeeping for the first time.</p>
+      </div>
+      <div class="our-team-img-card tall">
+        <img src="aboutImageLeft.png" alt="Rows of beehives in an apiary" loading="lazy" />
+      </div>
+    </div>
+    <!-- Right column -->
+    <div class="our-team-col stretch">
+      <div class="our-team-img-card flex">
+        <img src="ourTeamImageRight.png" alt="Beestar team with beekeepers in the field" loading="lazy" />
+      </div>
+      <div class="our-team-story-card">
+        <p class="our-team-story-title">Introduction Of The Sensors</p>
+        <p class="our-team-story-body">We put a sensor in his hives to make his work a little easier. That sensor showed us the problems running through the whole industry. So we started asking questions. One beekeeper led to another, one clue led to the next, and that trail has carried us all the way to today.</p>
+      </div>
+      <div class="our-team-story-card">
+        <p class="our-team-story-title">How It Began</p>
+        <p class="our-team-story-body">We came together to help beekeepers become better beekeepers, by giving them the tools and the sight they never had. We put all of our time and all of our energy into that one thing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     8. OUR PARTNERS
+────────────────────────────────────────── -->
+<section id="our-partners" aria-labelledby="our-partners-heading">
+  <div class="partners-header">
+    <span class="solutions-label">Our Partners</span>
+    <h2 class="partners-h2 gt-dark" id="our-partners-heading">Trusted By Government, Industry &amp; Research Leaders</h2>
+    <p class="partners-body">We work with organisations that care about the same thing we do, real outcomes in the field. Measurable performance, traceability, and reporting that holds up.</p>
+  </div>
+
+  <div class="partners-viewport">
+    <div class="partners-track" id="ourPartnersTrack">
+      <div class="logo-card"><img src="partner-sa-gov.png" alt="Government partner" /><span class="logo-card-label">Government</span></div>
+      <div class="logo-card"><img class="darken" src="partner-arc.png" alt="Australian Research Council" /><span class="logo-card-label">Research</span></div>
+      <div class="logo-card"><img src="partner-mobius.png" alt="Mobius" /><span class="logo-card-label">Industry</span></div>
+      <div class="logo-card"><img src="partner-uts.png" alt="UTS" /><span class="logo-card-label">Research</span></div>
+      <div class="logo-card"><img src="partner-macquarie.png" alt="Macquarie University" /><span class="logo-card-label">Research</span></div>
+      <div class="logo-card"><img src="partner-nssn.png" alt="NSSN" /><span class="logo-card-label">Research</span></div>
+      <div class="logo-card"><img src="partner-nff.png" alt="Certification partner" /><span class="logo-card-label">Certification</span></div>
+      <div class="logo-card"><img src="partner-evoke.png" alt="Evoke" /><span class="logo-card-label">Certification</span></div>
+    </div>
+  </div>
+
+  <div class="partners-bottom">
+    <div class="partners-photos">
+      <div class="partners-photo"><img src="ourTeam1.png" alt="Beekeeper inspecting hive frame" loading="lazy" /></div>
+      <div class="partners-photo"><img src="ourTeam2.png" alt="Beekeeper lifting hive box" loading="lazy" /></div>
+    </div>
+    <div class="recognition-card">
+      <div class="recognition-header">
+        <h3 class="recognition-h2 gt-dark">Recognition &amp; Certifications</h3>
+        <a href="#cta" class="btn btn-dark">Talk To Us</a>
+      </div>
+      <ul class="recognition-list">
+        <li class="recognition-item">
+          <div class="recognition-check">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10.5L8 14.5L16 6" stroke="#4b563f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="recognition-text">Winner of the Australian Bee Tech Challenge 2022</span>
+        </li>
+        <li class="recognition-item">
+          <div class="recognition-check">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10.5L8 14.5L16 6" stroke="#4b563f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="recognition-text">First industry partner for ARC molecular biosensors</span>
+        </li>
+        <li class="recognition-item">
+          <div class="recognition-check">
+            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 10.5L8 14.5L16 6" stroke="#4b563f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="recognition-text">National Farm Data Code Certified</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     9. FAQ
+────────────────────────────────────────── -->
+<section id="faq" aria-labelledby="faq-heading">
+  <h2 class="faq-title gt-dark" id="faq-heading">Have questions?<br>Get some answers</h2>
+
+  <div class="faq-groups">
+
+    <div class="faq-group">
+      <h3 class="faq-group-title">About Beestar</h3>
+      <div class="faq-list" role="list">
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a1">
+            <span class="faq-q-text">What does BeeSTAR do?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a1" role="region">
+            We build digital infrastructure for bee dependent economies. That means sensors that go inside commercial hives, an app that turns the data into something useful, and an analytics layer that helps beekeepers, growers, and researchers understand what's actually happening with the bees.
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a2">
+            <span class="faq-q-text">Who is BeeSTAR for?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a2" role="region">
+            Commercial beekeepers running multi site operations. Growers who depend on pollination. Researchers studying bee health. Industry bodies and government agencies working on the bigger picture. We design for people who manage hives at scale.
+          </div>
+        </div>
+        <div class="faq-item faq-item--last" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a3">
+            <span class="faq-q-text">Where do you operate?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a3" role="region">
+            We're based in Brisbane and active across Australia. Our research partners sit in NSW and the ACT, and our work covers multiple states and crops. International expansion follows once the Australian operation is solid.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-group">
+      <h3 class="faq-group-title">The Technology</h3>
+      <div class="faq-list" role="list">
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a4">
+            <span class="faq-q-text">What does the sensor measure?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a4" role="region">
+            Three readings inside the hive, continuously. Temperature, humidity, and light. Together they give us the key indicators of colony health and surface the early warning signs in time to act.
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a5">
+            <span class="faq-q-text">Will the sensor disturb my bees?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a5" role="region">
+            No. The sensor is designed to sit inside the hive without interfering with normal bee activity. Even the colour was chosen based on bee vision research, sitting in a part of the spectrum bees don't react to.
+          </div>
+        </div>
+        <div class="faq-item faq-item--last" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a6">
+            <span class="faq-q-text">Do I need to be technical to use the app?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a6" role="region">
+            No. The app is built for beekeepers and growers, not engineers. If you can use a phone, you can use BeeSTAR. The technical work happens behind the scenes.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-group">
+      <h3 class="faq-group-title">Your Data</h3>
+      <div class="faq-list" role="list">
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a7">
+            <span class="faq-q-text">Who owns the data?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a7" role="region">
+            You do. We're a signatory to the Australian Farm Data Code, which means your data stays yours and you control how it's used. We don't sell it. We don't share it without your permission.
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a8">
+            <span class="faq-q-text">How is the data protected?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a8" role="region">
+            Standard encryption in transit and at rest, hosted in Australia, with role based access for your team. Full details are in our Privacy Policy.
+          </div>
+        </div>
+        <div class="faq-item faq-item--last" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a9">
+            <span class="faq-q-text">Can I share my data with growers, auditors, or certifiers?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a9" role="region">
+            Yes. The app lets you generate reports and grant view access where you need to. You stay in control of who sees what.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-group">
+      <h3 class="faq-group-title">Working With Us</h3>
+      <div class="faq-list" role="list">
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a10">
+            <span class="faq-q-text">How do I get started?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a10" role="region">
+            Get in touch through the contact form. We'll set up a call, walk through what you need, and figure out if BeeSTAR is the right fit. We onboard new operators in a structured way to make sure the deployment goes smoothly.
+          </div>
+        </div>
+        <div class="faq-item" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a11">
+            <span class="faq-q-text">Do you work with researchers?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a11" role="region">
+            Yes. We currently work with research partners at UTS, ANU, and Macquarie, and we're open to new collaborations on bee health, pollination science, and traceability. If you've got a project, get in touch.
+          </div>
+        </div>
+        <div class="faq-item faq-item--last" role="listitem">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-a12">
+            <span class="faq-q-text">I'm a grower. How does BeeSTAR help me?</span>
+            <div class="faq-icon" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="#1e2c0f" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          </button>
+          <div class="faq-answer" id="faq-a12" role="region">
+            You'll know more about the hives that pollinate your crop. When the hives arrived, what condition they're in, and how the pollination event went. That helps with planning, certification, and proving outcomes to your buyers.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────
+     8. CTA + FOOTER
+────────────────────────────────────────── -->
+<section id="cta" aria-labelledby="cta-heading">
+  <div class="cta-card">
+    <img class="cta-bg" src="contactFormBG.png" alt="" aria-hidden="true" loading="lazy" style="opacity:1;" />
+    <div class="cta-content">
+      <div class="cta-text">
+        <h2 class="cta-h2 gt-dark" id="cta-heading">Talk To Us</h2>
+        <p class="cta-sub">Whether you've got a question, a hive, a paddock, or a proposal, we'd like to hear it.</p>
+      </div>
+      <form class="cta-form" action="https://formsubmit.co/info@beestar.com.au" method="POST">
+        <input type="hidden" name="_subject" value="New enquiry from Beestar website" />
+        <input type="hidden" name="_captcha" value="false" />
+
+        <div class="cta-field">
+          <label class="cta-label" for="cta-email">Email <span class="cta-req">*</span></label>
+          <input type="email" id="cta-email" name="email" placeholder="example@email.com.au" required />
+        </div>
+
+        <div class="cta-row">
+          <div class="cta-field">
+            <label class="cta-label" for="cta-first">First Name <span class="cta-req">*</span></label>
+            <input type="text" id="cta-first" name="first_name" placeholder="Jane" required />
+          </div>
+          <div class="cta-field">
+            <label class="cta-label" for="cta-last">Last Name <span class="cta-req">*</span></label>
+            <input type="text" id="cta-last" name="last_name" placeholder="Doe" required />
+          </div>
+        </div>
+
+        <div class="cta-field">
+          <label class="cta-label" for="cta-org">Organisation Name</label>
+          <input type="text" id="cta-org" name="organisation" placeholder="Acme Inc." />
+        </div>
+
+        <div class="cta-field">
+          <label class="cta-label" for="cta-role">I am a... <span class="cta-req">*</span></label>
+          <div class="cta-select-wrap">
+            <select id="cta-role" name="role" required>
+              <option value="" disabled selected>Select one</option>
+              <option value="Beekeeper">Beekeeper</option>
+              <option value="Grower">Grower</option>
+              <option value="Researcher">Researcher</option>
+              <option value="Investor">Investor</option>
+              <option value="Government or Industry">Government or Industry</option>
+              <option value="Media">Media</option>
+              <option value="Other">Other</option>
+            </select>
+            <svg class="cta-chevron" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="cta-field">
+          <label class="cta-label" for="cta-message">Message</label>
+          <textarea id="cta-message" name="message" placeholder="How can we help you?"></textarea>
+        </div>
+
+        <div class="cta-check">
+          <input type="checkbox" id="cta-newsletter" name="newsletter" value="yes" />
+          <label for="cta-newsletter">Sign me up to the newsletter</label>
+        </div>
+
+        <button type="submit" class="btn btn-white" style="align-self:flex-start;">Submit Form</button>
+      </form>
+    </div>
+    <img class="cta-bee" src="bee.png" alt="Bee" loading="lazy" />
+  </div>
+</section>
+
+<footer aria-label="Site footer">
+  <div class="footer-top">
+    <img class="footer-logo" src="footerLogo.svg" alt="Beestar" width="209" height="32" />
+    <a href="#how-it-works" class="btn btn-yellow">See The Tech</a>
+  </div>
+
+  <div class="footer-cols">
+    <div class="footer-col">
+      <span class="footer-col-title">Contact</span>
+      <address>315 Brunswick Street, Level 2<br>Fortitude Valley, QLD 4006</address>
+      <a href="mailto:info@beestar.com.au">info@beestar.com.au</a>
+    </div>
+
+    <div class="footer-col">
+      <span class="footer-col-title">Explore</span>
+      <a href="#solutions">Our Why</a>
+      <a href="#how-it-works">How We Do It</a>
+      <a href="#how-it-works">Our Tech</a>
+      <a href="#our-team">Our Team</a>
+      <a href="#faq">FAQs</a>
+    </div>
+
+    <div class="footer-col">
+      <span class="footer-col-title">Legal</span>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms-and-conditions.html">Terms of Service</a>
+      <a href="#">Data Security</a>
+      <a href="#">National Farm Data Code</a>
+    </div>
+
+    <div class="footer-col">
+      <span class="footer-col-title">Socials</span>
+      <a href="#">LinkedIn</a>
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
+      <a href="#">Youtube</a>
+    </div>
+  </div>
+</footer>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- ──────────────────────────────────────────
+     JavaScript
+────────────────────────────────────────── -->
+<script>
+  // Solutions tab switcher
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('aria-controls');
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      document.getElementById(targetId).classList.add('active');
+    });
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+
+      // Toggle current
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // Mobile nav
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  const mobileNavClose = document.getElementById('mobileNavClose');
+
+  hamburger.addEventListener('click', () => {
+    mobileNav.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  });
+
+  function closeNav() {
+    mobileNav.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  mobileNavClose.addEventListener('click', closeNav);
+
+  mobileNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeNav);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && mobileNav.classList.contains('open')) closeNav();
+  });
+
+  // Sticky nav: transparent over hero, #1e2c0f past it
+  const siteNav = document.getElementById('site-nav');
+  const heroEl  = document.getElementById('hero');
+  function updateNavBg() {
+    if (window.scrollY >= heroEl.offsetHeight - 80) {
+      siteNav.classList.add('scrolled');
+    } else {
+      siteNav.classList.remove('scrolled');
+    }
+  }
+  window.addEventListener('scroll', updateNavBg, { passive: true });
+  updateNavBg();
+
+  // Smooth active nav highlight on scroll
+  const sections = document.querySelectorAll('section[id], footer');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.style.color = link.getAttribute('href') === '#' + entry.target.id
+            ? 'rgba(255,254,244,1)'
+            : 'rgba(255,254,244,0.8)';
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+
+  /* ─────────────────────────────────────────
+     GSAP ANIMATIONS
+  ───────────────────────────────────────── */
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Respect reduced-motion preference
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReduced) {
+
+    /* ── 1. HERO — entrance timeline (no scroll needed) ── */
+    const heroTL = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    heroTL
+      .from('#site-nav .nav-logo', { y: -24, opacity: 0, duration: 0.6 })
+      .from('.nav-links li',    { y: -20, opacity: 0, stagger: 0.07, duration: 0.5 }, '-=0.3')
+      .fromTo('.nav-actions .btn',{ y: -20, opacity: 0 },{ y: 0, opacity: 1, stagger: 0.1, duration: 0.5 }, '-=0.3')
+      .from('.hero-h1',         { y: 64,  opacity: 0, duration: 1.0 }, '-=0.2')
+      .from('.hero-sub',        { y: 40,  opacity: 0, duration: 0.8 }, '-=0.55')
+      .fromTo('.hero-cta',      { y: 32,  opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, clearProps: 'opacity,transform,translate' }, '-=0.5')
+      .from('.stat-divider',    { scaleY: 0, opacity: 0, stagger: 0.08, duration: 0.4, transformOrigin: 'center' }, '-=0.45')
+      .from('.stat-item',       { y: 24,  opacity: 0, stagger: 0.1,  duration: 0.6 }, '-=0.45')
+      .from('.scroll-pill',     { y: 16,  opacity: 0, duration: 0.5 }, '-=0.2');
+
+    /* ── Stat counter (runs after hero TL) ── */
+    document.querySelectorAll('.stat-value').forEach(el => {
+      const raw = el.textContent.trim();
+      if (raw === '24/7') return; // skip non-numeric
+      const hasPct    = raw.includes('%');
+      const hasComma  = raw.includes(',');
+      const numeric   = parseFloat(raw.replace(/[^\d.]/g, ''));
+      if (isNaN(numeric)) return;
+      const obj = { val: 0 };
+      gsap.to(obj, {
+        val: numeric, duration: 2, ease: 'power2.out', delay: 1.2,
+        onUpdate() {
+          const v = Math.round(obj.val);
+          el.textContent = hasPct ? v + '%'
+            : hasComma ? v.toLocaleString()
+            : String(v);
+        },
+        onComplete() { el.textContent = raw; } // restore original string exactly
+      });
+    });
+
+    /* ── Helper: fade-up on scroll ── */
+    function reveal(targets, vars = {}) {
+      const els = gsap.utils.toArray(targets);
+      if (!els.length) return;
+      const {
+        triggerEl = els[0], start = 'top 88%',
+        y = 50, opacity = 0,
+        duration = 0.85, stagger = 0, delay = 0,
+        ease = 'power3.out', x = 0
+      } = vars;
+      gsap.fromTo(els,
+        { y, x, opacity },
+        { y: 0, x: 0, opacity: 1, duration, stagger, delay, ease,
+          scrollTrigger: { trigger: triggerEl, start }
+        }
+      );
+    }
+
+    /* ── 2. PARTNERS — infinite scrolling marquee ── */
+    function runMarquee(viewportEl, trackEl) {
+      if (!trackEl || !viewportEl) return;
+      const init = () => {
+        const origLogos = [...trackEl.children];
+        const gap       = 8;
+        // Clone enough sets so the track fills at least 3× the viewport
+        const vw = viewportEl.offsetWidth;
+        while (trackEl.scrollWidth < vw * 3) {
+          origLogos.forEach(logo => {
+            const clone = logo.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            trackEl.appendChild(clone);
+          });
+        }
+        // Measure one set width after cloning (images are loaded now)
+        const logoW   = origLogos[0].offsetWidth;
+        const oneSetW = origLogos.length * (logoW + gap);
+
+        // Animate from 0 → -oneSetW, then repeat seamlessly
+        const tween = gsap.fromTo(trackEl,
+          { x: 0 },
+          { x: -oneSetW, duration: 30, ease: 'none', repeat: -1 }
+        );
+        viewportEl.addEventListener('mouseenter', () => tween.pause());
+        viewportEl.addEventListener('mouseleave', () => tween.resume());
+      };
+      // Run after all resources (including images) are loaded
+      if (document.readyState === 'complete') { init(); }
+      else { window.addEventListener('load', init, { once: true }); }
+    }
+
+    runMarquee(
+      document.querySelector('#partners .partners-viewport'),
+      document.getElementById('topPartnersTrack')
+    );
+    runMarquee(
+      document.querySelector('#our-partners .partners-viewport'),
+      document.getElementById('ourPartnersTrack')
+    );
+
+
+    /* ── 6. HOW IT WORKS — pinned single card, 3-step sequence ── */
+    reveal('.how-h2', { y: 64, duration: 1.0 });
+
+    (function() {
+      const section  = document.getElementById('how-it-works');
+      const infos    = gsap.utils.toArray('.step-info');
+      const medias   = gsap.utils.toArray('.step-media-panel');
+      const dots     = gsap.utils.toArray('.step-dot');
+      const STEPS    = infos.length;
+      if (STEPS < 2 || prefersReduced) return;
+
+      let current    = 0;
+      let isAnimating = false;
+
+      // Initialise: first step active, rest hidden
+      infos.forEach((info, i) => {
+        if (i > 0) gsap.set(info, { opacity: 0 });
+      });
+      medias.forEach((media, i) => {
+        if (i > 0) gsap.set(media, { opacity: 0 });
+      });
+      gsap.set(dots[0], { width: 86, borderRadius: 2 });
+
+      function transitionTo(next) {
+        if (next === current || isAnimating) return;
+        isAnimating = true;
+        const prev = current;
+        current = next;
+
+        const prevInfo  = infos[prev];
+        const nextInfo  = infos[next];
+        const prevMedia = medias[prev];
+        const nextMedia = medias[next];
+
+        // Text elements to animate
+        const getEls = (info) => ['step-title','step-subtitle','step-pills']
+          .map(c => info.querySelector('.' + c)).filter(Boolean);
+
+        // Exit prev text: slide up + fade (power2.in)
+        gsap.to(getEls(prevInfo), {
+          y: -28, opacity: 0,
+          stagger: 0.04, duration: 0.25, ease: 'power2.in',
+          onComplete() {
+            prevInfo.classList.remove('active');
+            gsap.set(prevInfo, { opacity: 0 });
+
+            // Enter next text: slide from below + fade (power2.out)
+            nextInfo.classList.add('active');
+            gsap.set(nextInfo, { opacity: 1 });
+            gsap.fromTo(getEls(nextInfo),
+              { y: 28, opacity: 0 },
+              { y: 0, opacity: 1, stagger: 0.07, duration: 0.42,
+                ease: 'power2.out', clearProps: 'transform,opacity',
+                onComplete() { isAnimating = false; }
+              }
+            );
+          }
+        });
+
+        // Right visual: opacity crossfade (no slide)
+        gsap.to(prevMedia, {
+          opacity: 0, duration: 0.3, ease: 'power2.in',
+          onComplete() {
+            prevMedia.classList.remove('active');
+            nextMedia.classList.add('active');
+            gsap.fromTo(nextMedia,
+              { opacity: 0 },
+              { opacity: 1, duration: 0.45, ease: 'power2.out' }
+            );
+          }
+        });
+
+        // Dots: active expands to pill, others shrink to circle
+        dots.forEach((dot, i) => {
+          gsap.to(dot, {
+            width:        i === next ? 86 : 4,
+            borderRadius: i === next ? 2  : 50,
+            duration: 0.3, ease: 'power2.out'
+          });
+        });
+      }
+
+      const scrollDist = (STEPS - 1) * Math.max(600, window.innerHeight * 0.75);
+
+      ScrollTrigger.create({
+        trigger: section,
+        pin:     true,
+        start:   'top top+=88',
+        end:     `+=${scrollDist}`,
+        snap: {
+          snapTo:   1 / (STEPS - 1),
+          duration: { min: 0.3, max: 0.6 },
+          ease:     'power2.inOut',
+        },
+        onUpdate(self) {
+          const step = Math.round(self.progress * (STEPS - 1));
+          transitionTo(step);
+        }
+      });
+    })();
+
+    /* ── 7. OUR TEAM ── */
+    reveal('.our-team-h2',          { y: 64, duration: 1.0 });
+    reveal('.our-team-story-card',  { stagger: 0.12, y: 40, duration: 0.75 });
+    reveal('.our-team-img-card',    { stagger: 0.1,  y: 40, duration: 0.8 });
+
+    /* ── 8. FAQ ── */
+    reveal('.faq-title', { y: 64, duration: 1.0 });
+    reveal('.faq-item',  { stagger: 0.09, y: 28, duration: 0.6 });
+
+    /* ── 9. CTA ── */
+    reveal('.cta-card',    { y: 64, duration: 1.0 });
+    reveal('.cta-h2',      { y: 40, duration: 0.8, delay: 0.18, triggerEl: '.cta-card' });
+    reveal('.cta-sub',     { y: 30, duration: 0.7, delay: 0.28, triggerEl: '.cta-card' });
+    reveal('.cta-form',    { y: 24, duration: 0.6, delay: 0.36, triggerEl: '.cta-card' });
+
+    /* ── 10. FOOTER ── */
+    reveal('.footer-col',  { stagger: 0.08, y: 30, duration: 0.6 });
+    reveal('.footer-logo', { y: 20, duration: 0.6 });
+
+  } // end !prefersReduced
+
+  /* ── Features carousel: mouse-drag + momentum on tablet ── */
+  (function () {
+    const grid = document.querySelector('.features-grid');
+    if (!grid) return;
+    let dragging = false, startX = 0, scrollLeft = 0;
+    let lastX = 0, lastT = 0, velocity = 0;
+    let rafId = null;
+
+    function onDown(e) {
+      if (window.innerWidth > 900) return;
+      dragging = true;
+      startX = lastX = e.pageX;
+      lastT = Date.now();
+      scrollLeft = grid.scrollLeft;
+      velocity = 0;
+      cancelAnimationFrame(rafId);
+      grid.classList.add('is-dragging');
+    }
+    function onMove(e) {
+      if (!dragging) return;
+      e.preventDefault();
+      const now = Date.now();
+      const dt = now - lastT || 1;
+      velocity = (lastX - e.pageX) / dt; // px/ms
+      lastX = e.pageX;
+      lastT = now;
+      grid.scrollLeft = scrollLeft - (e.pageX - startX);
+    }
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      grid.classList.remove('is-dragging');
+      // coast with friction
+      let v = velocity * 14; // scale up to px/frame
+      function coast() {
+        if (Math.abs(v) < 0.5) return;
+        grid.scrollLeft += v;
+        v *= 0.92; // friction
+        rafId = requestAnimationFrame(coast);
+      }
+      coast();
+    }
+
+    grid.addEventListener('mousedown', onDown);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  })();
+</script>
+</body>
+</html>

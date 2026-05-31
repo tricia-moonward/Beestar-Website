@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms and Conditions — Beestar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── Tokens ── */
+    :root {
+      --cream:  #fffef4;
+      --g1000:  #1e2c0f;
+      --g800:   #4b563f;
+      --g600:   #78806f;
+      --g400:   #a5ab9f;
+      --g100:   #e8eae7;
+      --gmid:   #747751;
+      --yellow: #faffa4;
+      --white:  #ffffff;
+      --font:   'Plus Jakarta Sans', sans-serif;
+      --px:     300px;
+      --py:     100px;
+    }
+
+    /* ── Base ── */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--cream);
+      color: var(--g1000);
+      overflow-x: hidden;
+    }
+
+    /* ── Gradient text ── */
+    .gt-dark {
+      background: linear-gradient(to bottom, var(--g1000), var(--gmid));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 16px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-yellow      { background: var(--yellow); color: var(--g800); border: 1px solid var(--g100); }
+    .btn-ghost       { background: rgba(255,254,244,.15); border: 1px solid rgba(255,254,244,.55); backdrop-filter: blur(12px); color: var(--cream); font-weight: 400; }
+    .btn-outline-dark{ background: var(--white); border: 1px solid var(--g100); color: var(--g800); font-weight: 400; }
+
+    /* ── Nav ── */
+    #site-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      background: var(--g1000);
+      box-shadow: 0 2px 24px rgba(0,0,0,.3);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 24px 40px;
+    }
+    .nav-logo img { height: 32px; width: auto; max-width: none; flex-shrink: 0; display: block; }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      font-size: 16px;
+      color: rgba(255,254,244,.8);
+      font-weight: 400;
+    }
+    .nav-links a:hover { color: var(--cream); }
+    .nav-actions { display: flex; gap: 8px; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: all .3s;
+    }
+
+    /* ── Mobile nav drawer ── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(170deg, #1a2b0d 0%, #2e3f18 55%, #4a5a28 100%);
+      z-index: 100;
+      flex-direction: column;
+      padding: 0 40px 60px;
+      min-height: 100vh;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 0;
+    }
+    .mobile-nav-close {
+      color: var(--cream);
+      font-size: 32px;
+      line-height: 1;
+    }
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+    }
+    .mobile-nav-links a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--cream);
+      padding: 24px 0;
+      border-top: 1px solid rgba(255,254,244,.18);
+    }
+    .mobile-nav-links a:last-child { border-bottom: 1px solid rgba(255,254,244,.18); }
+    .mobile-nav-links a span:last-child { font-size: 28px; opacity: .8; }
+    .mobile-nav-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 40px;
+    }
+
+    /* ── Policy content ── */
+    .policy {
+      padding: 120px var(--px) var(--py);
+    }
+    .policy-inner {
+      max-width: 860px;
+    }
+    .policy h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--g1000);
+      margin-bottom: 48px;
+      line-height: 1.1;
+    }
+    .policy-section {
+      margin-bottom: 48px;
+    }
+    .policy-section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--g1000);
+      margin-bottom: 16px;
+    }
+    .policy-section p,
+    .policy-section li {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--g800);
+      margin-bottom: 12px;
+    }
+    .policy-section ul {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+    .policy-effective {
+      font-size: 14px;
+      color: var(--g600);
+      margin-bottom: 48px;
+    }
+    .policy-placeholder {
+      display: inline-block;
+      background: var(--g100);
+      color: var(--g400);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    /* ── CTA ── */
+    #cta {
+      background: var(--cream);
+      padding: var(--py) var(--px);
+    }
+    .cta-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      min-height: 622px;
+      display: flex;
+      align-items: stretch;
+    }
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      opacity: .4;
+    }
+    .cta-content {
+      position: relative;
+      z-index: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 40px;
+      max-width: 541px;
+    }
+    .cta-text { display: flex; flex-direction: column; gap: 24px; }
+    .cta-h2 {
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.48px;
+      line-height: 1;
+      text-transform: capitalize;
+    }
+    .cta-sub {
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--g600);
+    }
+    .cta-form {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(30,44,15,.1);
+      border: 1px solid var(--g100);
+      backdrop-filter: blur(17px);
+      border-radius: 40px;
+      padding: 8px 8px 8px 12px;
+      gap: 8px;
+    }
+    .cta-form input {
+      background: none;
+      border: none;
+      outline: none;
+      font-family: var(--font);
+      font-size: 16px;
+      color: var(--g1000);
+      flex: 1;
+      min-width: 0;
+    }
+    .cta-form input::placeholder { color: var(--g600); }
+    .cta-bee {
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 560px;
+      max-width: 55%;
+      height: auto;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--cream);
+      padding: 40px var(--px) 60px;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 60px;
+      border-top: 1px solid var(--g100);
+    }
+    footer img.footer-logo { height: 32px; width: auto; max-width: none; object-fit: contain; flex-shrink: 0; }
+    .footer-cols {
+      display: flex;
+      gap: 60px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .footer-col { display: flex; flex-direction: column; gap: 16px; }
+    .footer-col-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--g400);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .footer-col a { font-size: 14px; color: var(--g800); line-height: 1; }
+    .footer-col a:hover { color: var(--g1000); }
+    .footer-col address { font-size: 14px; font-style: normal; color: var(--g800); line-height: 1.6; }
+
+    /* ── Responsive ── */
+    @media (min-width: 2101px) {
+      :root { --px: calc((100vw - 1500px) / 2); }
+    }
+    @media (max-width: 1200px) {
+      :root { --px: 120px; }
+    }
+    @media (max-width: 900px) {
+      :root { --px: 40px; --py: 40px; }
+      .nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .nav-actions { display: none; }
+      .nav-hamburger { display: flex; }
+      .policy h1 { font-size: 36px; }
+      .cta-h2 { font-size: 40px; }
+      .cta-content { justify-content: flex-start; max-width: 75%; }
+      .cta-bee { top: auto; bottom: -60px; transform: none; }
+      footer { flex-direction: column; gap: 32px; }
+      .footer-cols { gap: 32px; }
+    }
+    @media (max-width: 600px) {
+      :root { --px: 16px; --py: 40px; }
+      .policy h1 { font-size: 28px; }
+      .policy { padding-top: 80px; }
+      .nav-logo img { height: 24px; }
+      footer img.footer-logo { height: 24px; }
+      .cta-card { min-height: 624px; }
+      .cta-content { max-width: 100%; padding: 32px 24px; gap: 24px; }
+      .cta-bee {
+        display: block;
+        width: 114%;
+        left: 50%;
+        right: auto;
+        top: auto;
+        bottom: -18px;
+        transform: translateX(-50%);
+      }
+      footer { padding-bottom: 40px; }
+      .footer-cols { flex-direction: column; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<header id="site-nav">
+  <nav class="nav" aria-label="Main navigation">
+    <a href="index.html" class="nav-logo" aria-label="Beestar home">
+      <img src="logo-white.svg" alt="Beestar" width="209" height="32" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#features">Solutions</a></li>
+      <li><a href="index.html#how-it-works">Our Tech</a></li>
+      <li><a href="index.html#benefits">About</a></li>
+      <li><a href="index.html#our-team">Our Team</a></li>
+      <li><a href="index.html#faq">FAQs</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="index.html#how-it-works" class="btn btn-yellow">See The Technology</a>
+      <a href="index.html#cta" class="btn btn-ghost">Get in Touch</a>
+    </div>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- ── Mobile nav drawer ── -->
+<div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation">
+  <div class="mobile-nav-header">
+    <a href="index.html" class="nav-logo" aria-label="Beestar home">
+      <img src="logo-white.svg" alt="Beestar" width="209" height="32" />
+    </a>
+    <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">&times;</button>
+  </div>
+  <nav class="mobile-nav-links">
+    <a href="index.html#features"><span>Solutions</span><span aria-hidden="true">→</span></a>
+    <a href="index.html#how-it-works"><span>Our Tech</span><span aria-hidden="true">→</span></a>
+    <a href="index.html#benefits"><span>About</span><span aria-hidden="true">→</span></a>
+    <a href="index.html#our-team"><span>Our Team</span><span aria-hidden="true">→</span></a>
+    <a href="index.html#faq"><span>FAQs</span><span aria-hidden="true">→</span></a>
+  </nav>
+  <div class="mobile-nav-actions">
+    <a href="index.html#how-it-works" class="btn btn-yellow">See The Technology</a>
+    <a href="index.html#cta" class="btn btn-ghost">Get in Touch</a>
+  </div>
+</div>
+
+<!-- ── Terms and Conditions content ── -->
+<main class="policy">
+  <div class="policy-inner">
+    <h1>Terms and Conditions</h1>
+    <p class="policy-effective">Effective date: <span class="policy-placeholder">[insert]</span></p>
+
+    <div class="policy-section">
+      <h2>1. Welcome</h2>
+      <p>These Terms of Use govern your use of the BeeSTAR website, the BeeSTAR app, the BeeSTAR sensor system, and any related services we provide. They apply between you and BeeSTAR Holdings Pty Ltd (ABN <span class="policy-placeholder">[insert]</span>), trading as BeeSTAR. By using our services, you accept these Terms. If you don't accept them, please don't use the services.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>2. Definitions</h2>
+      <ul>
+        <li>"Services" means the BeeSTAR website, the BeeSTAR app, the BeeSTAR sensor system, and any related services we provide</li>
+        <li>"Hardware" means the BeeSTAR sensor enclosure and any other physical equipment we supply</li>
+        <li>"Data" means all data generated from your use of the Services, including personal information and hive data</li>
+        <li>"We", "us", "our" means BeeSTAR Holdings Pty Ltd and its related entities</li>
+        <li>"You" means the customer using the Services, whether as an individual or on behalf of an organisation</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>3. Your right to use the services</h2>
+      <p>We grant you a non-exclusive, non-transferable licence to use the Services for monitoring and managing the health, status, conditions, and movement of your hives. The licence runs for the duration of your active subscription or service agreement and is subject to these Terms.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>4. Your account</h2>
+      <p>You're responsible for keeping your account credentials secure. Tell us promptly if you think someone else has access to your account.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>5. Hardware</h2>
+      <p>Where Hardware is provided as part of your service, it remains BeeSTAR property unless your written agreement with us says otherwise. You agree to:</p>
+      <ul>
+        <li>Use the Hardware as intended and as documented</li>
+        <li>Not modify, tamper with, or attempt to reverse engineer it</li>
+        <li>Return it in good working condition, allowing for reasonable wear and tear, at the end of your service</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>6. Service availability</h2>
+      <p>We aim to keep the Services available continuously. We can't guarantee uninterrupted access. Connectivity, sensor performance, third-party service providers, and external events can affect availability. We're not liable for losses caused by service interruption beyond our reasonable control.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>7. Fees and payment</h2>
+      <p>Fees are set out in your service agreement, order form, or pricing schedule, all of which form an integral part of these Terms. Payment terms, currency, and frequency are agreed at signup. Late payment may result in suspension or termination of access after written notice.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>8. Data, ownership, and privacy</h2>
+      <p>Your data is handled under our <a href="privacy-policy.html" style="color:var(--g1000);text-decoration:underline;">Privacy Policy</a>, which forms part of these Terms. Key points to note:</p>
+      <ul>
+        <li>You retain ownership of the raw data generated by your hives, including sensor readings and hive records you create</li>
+        <li>We retain ownership of the analytical models, derived insights, and aggregated outputs built from that data</li>
+        <li>We don't sell your personal data</li>
+        <li>We're a signatory to the Australian Farm Data Code</li>
+      </ul>
+      <p>The full detail is in the Privacy Policy.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>9. Termination</h2>
+      <p>You can end your service by following the termination process in your service agreement. We can end your access if you breach these Terms or fall behind on payments after written notice and a reasonable opportunity to remedy.</p>
+      <p>On termination:</p>
+      <ul>
+        <li>You must return any BeeSTAR Hardware in good working condition within the timeframe set out in your agreement</li>
+        <li>Your personal information will be deleted within thirty days of completion of the termination process and return of Hardware</li>
+        <li>Hive data is retained in identifiable form for six months, then de-identified</li>
+      </ul>
+    </div>
+
+    <div class="policy-section">
+      <h2>10. Risk awareness</h2>
+      <p>We take data security seriously and use industry-standard protections. We can't fully eliminate the risk of data breaches, unauthorised access, or service disruption from external factors. By using the Services you acknowledge those risks.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>11. Limitation of liability</h2>
+      <p>To the fullest extent permitted by Australian law, our total liability to you for any claim arising from your use of the Services is limited to the fees you've paid us in the twelve months before the claim arose. We're not liable for indirect, consequential, or special damages.</p>
+      <p>Nothing in these Terms excludes or limits any rights you have under the Australian Consumer Law or other Australian legislation that can't lawfully be excluded.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>12. Amendments</h2>
+      <p>We may update these Terms from time to time. The current version will always be on our website. Material changes will be communicated to active users by email or through the app. Continued use of the Services after changes are posted means you accept the updated Terms.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>13. Disputes</h2>
+      <p>If a dispute comes up, we'd rather sort it out by talking. If we can't, disputes will be resolved through arbitration under the rules of the Australian Centre for International Commercial Arbitration. Arbitration will take place in Brisbane, Queensland unless we agree otherwise.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>14. Governing law</h2>
+      <p>These Terms are governed by the laws of Queensland, Australia.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>15. Contact</h2>
+      <p>For questions about these Terms or our Services:</p>
+      <p>
+        <span class="policy-placeholder">[General contact email]</span><br>
+        BeeSTAR Holdings Pty Ltd<br>
+        <span class="policy-placeholder">[Office address]</span>, Brisbane QLD, Australia
+      </p>
+    </div>
+  </div>
+</main>
+
+<!-- ── CTA ── -->
+<section id="cta" aria-labelledby="cta-heading">
+  <div class="cta-card">
+    <img class="cta-bg" src="contactFormBG.png" alt="" aria-hidden="true" loading="lazy" />
+    <div class="cta-content">
+      <div class="cta-text">
+        <h2 class="cta-h2 gt-dark" id="cta-heading">Talk To Us</h2>
+        <p class="cta-sub">Whether you've got a question, a hive, a paddock, or a proposal, we'd like to hear it.</p>
+      </div>
+      <form class="cta-form" action="https://formsubmit.co/info@beestar.com.au" method="POST">
+        <input type="email" name="email" placeholder="What's your email?" aria-label="Email address" required />
+        <input type="hidden" name="_subject" value="New enquiry from Beestar website" />
+        <input type="hidden" name="_captcha" value="false" />
+        <button type="submit" class="btn btn-outline-dark" style="font-size:16px;">Talk To Us</button>
+      </form>
+    </div>
+    <img class="cta-bee" src="https://www.figma.com/api/mcp/asset/cc6caccb-fd38-4114-84d6-33f35faebcd9" alt="Bee" loading="lazy" />
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer aria-label="Site footer">
+  <img class="footer-logo" src="logo-dark.svg" alt="Beestar" width="209" height="32" />
+
+  <div class="footer-cols">
+    <div class="footer-col">
+      <span class="footer-col-title">Contact</span>
+      <address>315 Brunswick Street, Level 2<br>Fortitude Valley, QLD 4006</address>
+      <a href="mailto:info@beestar.com.au">info@beestar.com.au</a>
+    </div>
+
+    <div class="footer-col">
+      <span class="footer-col-title">Explore</span>
+      <a href="index.html#features">Solutions</a>
+      <a href="index.html#how-it-works">Our Tech</a>
+      <a href="index.html#benefits">About</a>
+      <a href="index.html#our-team">Our Team</a>
+      <a href="index.html#faq">FAQs</a>
+    </div>
+
+    <div class="footer-col">
+      <span class="footer-col-title">Legal</span>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms-and-conditions.html">Terms of Service</a>
+      <a href="#">Data Security</a>
+      <a href="#">National Farm Data Code</a>
+    </div>
+
+    <div class="footer-col">
+      <span class="footer-col-title">Socials</span>
+      <a href="#">LinkedIn</a>
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
+      <a href="#">Youtube</a>
+    </div>
+
+    <a href="index.html#how-it-works" class="btn btn-yellow" style="align-self:flex-start;">See The Technology</a>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  const mobileNavClose = document.getElementById('mobileNavClose');
+
+  hamburger.addEventListener('click', () => {
+    mobileNav.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  });
+
+  function closeNav() {
+    mobileNav.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  mobileNavClose.addEventListener('click', closeNav);
+  mobileNav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeNav));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && mobileNav.classList.contains('open')) closeNav();
+  });
+</script>
+</body>
+</html>
